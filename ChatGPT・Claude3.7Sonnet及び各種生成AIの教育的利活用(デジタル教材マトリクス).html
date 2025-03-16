@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI開発ツール活用マトリクス</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap');
+        
+        :root {
+            --navy-dark: #0A1A2F;
+            --navy-medium: #112845;
+            --navy-light: #1D3461;
+            --accent-cyan: #42E2B8;
+            --accent-purple: #7B61FF;
+            --accent-pink: #FF5E5B;
+            --accent-yellow: #F9C846;
+            --text-light: #FFFFFF;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --cell-bg: rgba(29, 52, 97, 0.4);
+            --cell-hover: rgba(59, 89, 152, 0.6);
+            --cell-border: rgba(66, 226, 184, 0.3);
+            --header-bg: rgba(10, 26, 47, 0.8);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, var(--navy-dark), var(--navy-medium), var(--navy-light));
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            min-height: 100vh;
+            color: var(--text-light);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0;
+        }
+        
+        .title-container {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(66, 226, 184, 0.5), 0 0 30px rgba(123, 97, 255, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+            line-height: 1.4;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 10px rgba(66, 226, 184, 0.5), 0 0 20px rgba(123, 97, 255, 0.3); }
+            to { text-shadow: 0 0 20px rgba(66, 226, 184, 0.8), 0 0 30px rgba(123, 97, 255, 0.6); }
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .matrix-container {
+            width: 100%;
+            overflow-x: auto;
+            background: rgba(10, 26, 47, 0.5);
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(66, 226, 184, 0.2);
+            margin-bottom: 2rem;
+            display: block;
+        }
+        
+        .matrix {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 4px;
+            min-width: 950px; /* Increased to ensure all columns display */
+            table-layout: fixed;
+        }
+        
+        .matrix th, .matrix td {
+            padding: 1rem;
+            text-align: center;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .matrix th {
+            background: var(--header-bg);
+            font-weight: 500;
+            color: var(--text-light);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .matrix th::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }
+        
+        .matrix .phase-header {
+            font-size: 1.1rem;
+            position: relative;
+            padding-top: 40px; /* Increased padding to create more space */
+        }
+        
+        .phase-header .phase-number {
+            position: absolute;
+            top: 5px; /* Keeps the number at the top of the cell */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--navy-dark);
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(66, 226, 184, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            z-index: 2;
+            margin-bottom: 15px; /* Added margin to create separation */
+        }
+        
+        /* Flow arrows between phases */
+        .flow-arrow {
+            position: absolute;
+            top: 50%;
+            right: -18px;
+            width: 30px;
+            height: 10px;
+            transform: translateY(-50%);
+            z-index: 5;
+        }
+        
+        .flow-arrow::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 2px;
+            background: var(--accent-cyan);
+            box-shadow: 0 0 8px rgba(66, 226, 184, 0.8);
+        }
+        
+        .flow-arrow::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            right: 0;
+            border-left: 8px solid var(--accent-cyan);
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            filter: drop-shadow(0 0 4px rgba(66, 226, 184, 0.8));
+        }
+        
+        .matrix td {
+            background: var(--cell-bg);
+            border: 1px solid var(--cell-border);
+            position: relative;
+            vertical-align: top;
+            min-width: 160px;
+            max-width: 200px;
+        }
+        
+        .matrix td:hover {
+            background: var(--cell-hover);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            border-color: var(--accent-cyan);
+        }
+        
+        .cell-content {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+        
+        .phase-icon {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-cyan);
+        }
+        
+        .tool-row {
+            position: relative;
+        }
+        
+        .tool-name {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: var(--header-bg);
+            border-radius: 6px;
+            min-width: 160px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .tool-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            margin-right: 10px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .tool-label {
+            font-weight: 500;
+            font-size: 1rem;
+        }
+        
+        .cell-check {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: var(--accent-cyan);
+        }
+        
+        .chatgpt-cell { border-left: 3px solid rgb(0, 171, 107); }
+        .claude-cell { border-left: 3px solid rgb(125, 81, 246); }
+        .gemini-cell { border-left: 3px solid rgb(255, 193, 7); }
+        .perplexity-cell { border-left: 3px solid rgb(253, 126, 20); }
+        .napkin-cell { border-left: 3px solid rgb(255, 64, 129); }
+        .canva-cell { border-left: 3px solid rgb(0, 153, 255); }
+        .imgur-cell { border-left: 3px solid rgb(26, 188, 156); }
+        .github-cell { border-left: 3px solid rgb(110, 84, 148); }
+        
+        /* フェーズ別カラー */
+        .col-1 .phase-number, .workflow-steps .workflow-step:nth-child(1) .workflow-icon {
+            background: linear-gradient(135deg, #42E2B8, #4B6CB7);
+        }
+        
+        .col-2 .phase-number, .workflow-steps .workflow-step:nth-child(3) .workflow-icon {
+            background: linear-gradient(135deg, #FF5E5B, #FF9D76);
+        }
+        
+        .col-3 .phase-number, .workflow-steps .workflow-step:nth-child(5) .workflow-icon {
+            background: linear-gradient(135deg, #7B61FF, #B39DDB);
+        }
+        
+        .col-4 .phase-number, .workflow-steps .workflow-step:nth-child(7) .workflow-icon {
+            background: linear-gradient(135deg, #F9C846, #FFE082);
+        }
+        
+        /* フェーズカラー */
+        .col-1 th::after { background: linear-gradient(90deg, #42E2B8, #4B6CB7); }
+        .col-2 th::after { background: linear-gradient(90deg, #FF5E5B, #FF9D76); }
+        .col-3 th::after { background: linear-gradient(90deg, #7B61FF, #B39DDB); }
+        .col-4 th::after { background: linear-gradient(90deg, #F9C846, #FFE082); }
+        
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 0.5rem;
+            }
+            
+            .container {
+                padding: 0;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .matrix-container {
+                padding: 0.5rem;
+                border-radius: 8px;
+            }
+            
+            .matrix th, .matrix td {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+            
+            .tool-icon {
+                width: 24px;
+                height: 24px;
+            }
+            
+            .tool-label {
+                font-size: 0.9rem;
+            }
+            
+            .cell-content {
+                font-size: 0.8rem;
+            }
+            
+            .phase-number {
+                width: 24px;
+                height: 24px;
+                font-size: 0.8rem;
+            }
+            
+            .flow-arrow {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-container">
+            <h1>ChatGPT・Claude3.7Sonnet及び各種生成AIの教育的利活用</h1>
+            <p class="subtitle">デジタル教材開発プロセスにおける各ツールの役割と位置づけ</p>
+        </div>
+        
+        <div class="matrix-container">
+            <table class="matrix">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="phase-header col-1">
+                            <div class="phase-number">1</div>
+                            草案作成
+                            <div class="flow-arrow"></div>
+                        </th>
+                        <th class="phase-header col-2">
+                            <div class="phase-number">2</div>
+                            デバッグ・デプロイ
+                            <div class="flow-arrow"></div>
+                        </th>
+                        <th class="phase-header col-3">
+                            <div class="phase-number">3</div>
+                            画像取込
+                            <div class="flow-arrow"></div>
+                        </th>
+                        <th class="phase-header col-4">
+                            <div class="phase-number">4</div>
+                            公開設定
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- ChatGPT -->
+                    <tr class="tool-row">
+                        <th class="tool-name">
+                            <img src="https://imgur.com/oocxU8z.png" alt="ChatGPT" class="tool-icon">
+                            <span class="tool-label">ChatGPT</span>
+                        </th>
+                        <td class="chatgpt-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                        <td class="chatgpt-cell">
+                            <div class="cell-check">★</div>
+                            <div class="cell-content">
+                                o3-mini-highによるバグ発見・環境への適応確認
+                            </div>
+                        </td>
+                        <td class="chatgpt-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                        <td class="chatgpt-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Claude -->
+                    <tr class="tool-row">
+                        <th class="tool-name">
+                            <img src="https://imgur.com/ZvDvETk.png" alt="Claude" class="tool-icon">
+                            <span class="tool-label">Claude 3.7</span>
+                        </th>
+                        <td class="claude-cell">
+                            <div class="cell-check">★</div>
+                            <div class="cell-content">
+                                ウェブインタラクティブゲーム・視覚教材のコーディング
+                            </div>
+                        </td>
+                        <td class="claude-cell">
+                            <div class="cell-check">★</div>
+                            <div class="cell-content">
+                                複雑なデバッグと論理展開の検証に優れている
+                            </div>
+                        </td>
+                        <td class="claude-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                        <td class="claude-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Gemini -->
+                    <tr class="tool-row">
+                        <th class="tool-name">
+                            <img src="https://imgur.com/cpuN6bW.png" alt="Gemini" class="tool-icon">
+                            <span class="tool-label">Gemini</span>
+                        </th>
+                        <td class="gemini-cell">
+                            <div class="cell-check">★</div>
+                            <div class="cell-content">
+                                DeepResearchによる情報収集とリサーチが強み
+                            </div>
+                        </td>
+                        <td class="gemini-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                        <td class="gemini-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                        <td class="gemini-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Perplexity -->
+                    <tr class="tool-row">
+                        <th class="tool-name">
+                            <img src="https://imgur.com/HVhkidW.png" alt="Perplexity" class="tool-icon">
+                            <span class="tool-label">Perplexity</span>
+                        </th>
+                        <td class="perplexity-cell">
+                            <div class="cell-check">★</div>
+                            <div class="cell-content">
+                                最新情報の確認と情報源を明示した参考資料収集
+                            </div>
+                        </td>
+                        <td class="perplexity-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                        <td class="perplexity-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                        <td class="perplexity-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- NapkinAI -->
+                    <tr class="tool-row">
+                        <th class="tool-name">
+                            <img src="https://imgur.com/65QSv5o.png" alt="NapkinAI" class="tool-icon">
+                            <span class="tool-label">NapkinAI</span>
+                        </th>
+                        <td class="napkin-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                        <td class="napkin-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                        <td class="napkin-cell">
+                            <div class="cell-check">★</div>
+                            <div class="cell-content">
+                                テキスト説明から図解やスケッチを素早く生成
+                            </div>
+                        </td>
+                        <td class="napkin-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Canva -->
+                    <tr class="tool-row">
+                        <th class="tool-name">
+                            <img src="https://imgur.com/yKUYWoK.png" alt="Canva" class="tool-icon">
+                            <span class="tool-label">Canva</span>
+                        </th>
+                        <td class="canva-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                        <td class="canva-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                        <td class="canva-cell">
+                            <div class="cell-check">★</div>
+                            <div class="cell-content">
+                                プレゼン資料やグラフィックデザインの作成と編集
+                            </div>
+                        </td>
+                        <td class="canva-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- imgur -->
+                    <tr class="tool-row">
+                        <th class="tool-name">
+                            <img src="https://imgur.com/4hLXDLF.png" alt="imgur" class="tool-icon">
+                            <span class="tool-label">imgur</span>
+                        </th>
+                        <td class="imgur-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                        <td class="imgur-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                        <td class="imgur-cell">
+                            <div class="cell-check">★</div>
+                            <div class="cell-content">
+                                画像のアップロードと共有リンクの生成
+                            </div>
+                        </td>
+                        <td class="imgur-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- GitHub -->
+                    <tr class="tool-row">
+                        <th class="tool-name">
+                            <img src="https://imgur.com/g0Jxytr.png" alt="GitHub" class="tool-icon">
+                            <span class="tool-label">GitHub</span>
+                        </th>
+                        <td class="github-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                        <td class="github-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                        <td class="github-cell">
+                            <div class="cell-content">
+                            </div>
+                        </td>
+                        <td class="github-cell">
+                            <div class="cell-check">★</div>
+                            <div class="cell-content">
+                                教材のバージョン管理と公開・共有設定
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        // アニメーション効果を強化
+        document.querySelectorAll('.matrix td').forEach(cell => {
+            cell.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.05)';
+                this.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.4)';
+                this.style.zIndex = '20';
+            });
+            
+            cell.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+                this.style.boxShadow = '';
+                this.style.zIndex = '';
+            });
+        });
+    </script>
+</body>
+</html>
