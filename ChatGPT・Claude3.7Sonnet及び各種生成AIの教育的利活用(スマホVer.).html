@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>生成AIの教育的利活用 プレゼンテーション</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1p:wght@400;500;700&family=Shippori+Mincho:wght@400;500;700&display=swap');
+        
+        :root {
+            --navy-1: #0A1A2F;
+            --navy-2: #112845;
+            --navy-3: #1D3461;
+            --navy-4: #2A4A7F;
+            --navy-5: #3B5998;
+            --navy-light: #4B6CB7;
+            --accent-1: #FF5E5B;
+            --accent-2: #42E2B8;
+            --accent-3: #F9C846;
+            --accent-4: #7B61FF;
+            --accent-5: #FF9D76;
+            --accent-6: #3CDBD3;
+            --accent-7: #FC5185;
+            --text-light: #FFFFFF;
+            --text-dark: #1A1A2E;
+            --glow: rgba(75, 108, 183, 0.4);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            line-height: 1.5;
+            color: var(--text-light);
+            background: linear-gradient(-45deg, #0A1A2F, #112845, #1D3461, #162B50);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            overscroll-behavior: none;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .presentation-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slides {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.5s ease;
+        }
+        
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-2) var(--navy-2);
+            background: linear-gradient(135deg, rgba(10, 26, 47, 0.8) 0%, rgba(29, 52, 97, 0.8) 100%);
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.4);
+        }
+        
+        .slide::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        .slide::-webkit-scrollbar-track {
+            background: var(--navy-2);
+        }
+        
+        .slide::-webkit-scrollbar-thumb {
+            background-color: var(--accent-2);
+            border-radius: 10px;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            z-index: 10;
+            pointer-events: auto;
+        }
+        
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            max-width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .slide-header {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .title-slide .slide-header {
+            margin-bottom: 50px;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 10px;
+            font-family: 'Shippori Mincho', serif;
+            text-shadow: 0 0 10px var(--glow), 0 1px 3px rgba(0,0,0,0.8);
+            line-height: 1.3;
+            letter-spacing: 0.5px;
+        }
+        
+        h2 {
+            font-size: 1.6rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            font-family: 'M PLUS 1p', sans-serif;
+            position: relative;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+            letter-spacing: 0.5px;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-2), transparent);
+        }
+        
+        h3 {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            margin: 15px 0 10px;
+            font-family: 'M PLUS 1p', sans-serif;
+            display: flex;
+            align-items: center;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+        }
+        
+        h3::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-2);
+            border-radius: 2px;
+            margin-right: 8px;
+            transform: rotate(45deg);
+        }
+        
+        p {
+            margin-bottom: 15px;
+            font-size: 1rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            line-height: 1.6;
+        }
+        
+        .highlight {
+            background-color: rgba(66, 226, 184, 0.25);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: var(--text-light);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            text-shadow: 0 1px 1px rgba(0,0,0,0.7);
+        }
+        
+        ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+            position: relative;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .nav-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            pointer-events: none;
+        }
+        
+        .nav-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            pointer-events: auto;
+        }
+        
+        .nav-button:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .nav-button.prev::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            border-left: 3px solid var(--text-light);
+            border-bottom: 3px solid var(--text-light);
+            transform: rotate(45deg);
+            margin-left: 5px;
+        }
+        
+        .nav-button.next::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            border-right: 3px solid var(--text-light);
+            border-top: 3px solid var(--text-light);
+            transform: rotate(45deg);
+            margin-right: 5px;
+        }
+        
+        .slide-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            padding: 5px 15px;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+        
+        .tool-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 18px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 1px rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .tool-card:active {
+            transform: scale(0.98);
+        }
+        
+        .card-chatgpt {
+            background: linear-gradient(135deg, rgba(0, 171, 107, 0.5) 0%, rgba(16, 255, 164, 0.25) 100%);
+            border-top: 3px solid rgb(0, 171, 107);
+            box-shadow: 0 5px 15px rgba(0, 171, 107, 0.4), 0 0 20px rgba(0, 171, 107, 0.2);
+        }
+        
+        .card-claude {
+            background: linear-gradient(135deg, rgba(125, 81, 246, 0.5) 0%, rgba(180, 155, 255, 0.25) 100%);
+            border-top: 3px solid rgb(125, 81, 246);
+            box-shadow: 0 5px 15px rgba(125, 81, 246, 0.4), 0 0 20px rgba(125, 81, 246, 0.2);
+        }
+        
+        .card-gemini {
+            background: linear-gradient(135deg, rgba(255, 217, 90, 0.5) 0%, rgba(255, 236, 179, 0.25) 100%);
+            border-top: 3px solid rgb(255, 193, 7);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4), 0 0 20px rgba(255, 193, 7, 0.2);
+        }
+        
+        .card-perplexity {
+            background: linear-gradient(135deg, rgba(253, 126, 20, 0.5) 0%, rgba(255, 183, 128, 0.25) 100%);
+            border-top: 3px solid rgb(253, 126, 20);
+            box-shadow: 0 5px 15px rgba(253, 126, 20, 0.4), 0 0 20px rgba(253, 126, 20, 0.2);
+        }
+        
+        .card-napkin {
+            background: linear-gradient(135deg, rgba(255, 64, 129, 0.5) 0%, rgba(255, 138, 179, 0.25) 100%);
+            border-top: 3px solid rgb(255, 64, 129);
+            box-shadow: 0 5px 15px rgba(255, 64, 129, 0.4), 0 0 20px rgba(255, 64, 129, 0.2);
+        }
+        
+        .card-canva {
+            background: linear-gradient(135deg, rgba(0, 153, 255, 0.5) 0%, rgba(116, 200, 255, 0.25) 100%);
+            border-top: 3px solid rgb(0, 153, 255);
+            box-shadow: 0 5px 15px rgba(0, 153, 255, 0.4), 0 0 20px rgba(0, 153, 255, 0.2);
+        }
+        
+        .tool-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .tool-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            margin-right: 10px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .character-card {
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 1px rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+            overflow: hidden;
+        }
+        
+        .character-card.writer {
+            background: linear-gradient(135deg, rgba(0, 171, 107, 0.3) 0%, rgba(0, 171, 107, 0.15) 100%);
+        }
+        
+        .character-card.researcher {
+            background: linear-gradient(135deg, rgba(125, 81, 246, 0.3) 0%, rgba(125, 81, 246, 0.15) 100%);
+        }
+        
+        .character-card.engineer {
+            background: linear-gradient(135deg, rgba(255, 64, 129, 0.3) 0%, rgba(255, 64, 129, 0.15) 100%);
+        }
+        
+        .character-head {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .character-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: var(--text-dark);
+            font-weight: bold;
+            flex-shrink: 0;
+            font-size: 14px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .character-icon.writer {
+            background: linear-gradient(135deg, rgb(0, 171, 107) 0%, rgb(0, 123, 85) 100%);
+        }
+        
+        .character-icon.researcher {
+            background: linear-gradient(135deg, rgb(125, 81, 246) 0%, rgb(92, 55, 201) 100%);
+        }
+        
+        .character-icon.engineer {
+            background: linear-gradient(135deg, rgb(255, 64, 129) 0%, rgb(217, 55, 110) 100%);
+        }
+        
+        .character-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text-light);
+            line-height: 1.2;
+        }
+        
+        .character-subtitle {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 2px;
+        }
+        
+        .character-desc {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            padding-left: 48px;
+        }
+        
+        .workflow-step {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 22px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 1px rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 15px;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--accent-2) 0%, var(--accent-6) 100%);
+            color: var(--text-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 0 10px var(--accent-2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .workflow-step h4 {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin: 10px 0;
+        }
+        
+        .summary-point {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .summary-point::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 12px;
+            height: 12px;
+            background: linear-gradient(135deg, var(--accent-2) 0%, var(--accent-6) 100%);
+            transform: rotate(45deg);
+            box-shadow: 0 0 8px var(--accent-2);
+        }
+        
+        .title-slide h1 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .title-slide p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .glow-effect {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+            filter: blur(20px);
+            opacity: 0.5;
+            z-index: 0;
+        }
+        
+        .glow-1 {
+            top: -50px;
+            right: -50px;
+            background: radial-gradient(circle, var(--accent-2) 0%, transparent 70%);
+        }
+        
+        .glow-2 {
+            bottom: -50px;
+            left: -50px;
+            background: radial-gradient(circle, var(--accent-4) 0%, transparent 70%);
+        }
+        
+        .title-slide .glow-1 {
+            width: 250px;
+            height: 250px;
+            top: -100px;
+            right: -100px;
+            opacity: 0.7;
+        }
+        
+        .title-slide .glow-2 {
+            width: 200px;
+            height: 200px;
+            bottom: -80px;
+            left: -80px;
+            opacity: 0.6;
+        }
+        
+        .process-mini {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .process-mini::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-2), var(--accent-4), var(--accent-7), var(--accent-3));
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+        
+        .process-mini-step {
+            width: 20%;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .mini-number {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--accent-2) 0%, var(--accent-6) 100%);
+            color: var(--text-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 8px;
+            box-shadow: 0 0 10px var(--accent-2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .mini-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 3px 5px;
+            border-radius: 4px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .slide-notice {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            z-index: 100;
+            pointer-events: none;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        /* Swipe hint animation */
+        .swipe-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            opacity: 0;
+            animation: swipeHint 3s ease-in-out 1s forwards;
+            pointer-events: none;
+        }
+        
+        .swipe-arrow {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .swipe-arrow::before {
+            content: '';
+            width: 15px;
+            height: 15px;
+            border-right: 3px solid white;
+            border-bottom: 3px solid white;
+            transform: rotate(-45deg);
+            position: absolute;
+            left: 18px;
+        }
+        
+        .swipe-trail {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            animation: trailAnimation 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes trailAnimation {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        
+        @keyframes swipeHint {
+            0% { opacity: 0; transform: translate(-70%, -50%); }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; transform: translate(-30%, -50%); }
+        }
+        
+        @media (min-width: 768px) {
+            .slide-content {
+                max-width: 700px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            h3 {
+                font-size: 1.5rem;
+            }
+            
+            p, li {
+                font-size: 1.1rem;
+            }
+            
+            .title-slide h1 {
+                font-size: 3rem;
+            }
+            
+            .character-title {
+                font-size: 1.3rem;
+            }
+            
+            .character-desc {
+                font-size: 1.1rem;
+            }
+            
+            .tool-img {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .mini-number {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .mini-label {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="slides">
+            <!-- Title Slide -->
+            <div class="slide title-slide active" id="slide-1">
+                <div class="slide-content">
+                    <div class="slide-header">
+                        <h1>ChatGPT・Claude3.7Sonnet 及び<br>各種生成AIの教育的利活用</h1>
+                    </div>
+                    <p>このプレゼンテーションでは、教育現場で活用できる生成AIツールの概要、特徴、および実践的な活用方法について紹介します。</p>
+                    <div class="glow-effect glow-1"></div>
+                    <div class="glow-effect glow-2"></div>
+                </div>
+                <div class="slide-notice">画面をスワイプまたはタップして進む</div>
+                <div class="swipe-hint">
+                    <div class="swipe-arrow">
+                        <div class="swipe-trail"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overview Slide -->
+            <div class="slide" id="slide-2">
+                <div class="slide-content">
+                    <div class="slide-header">
+                        <h2>プレゼンテーション内容</h2>
+                    </div>
+                    <ul>
+                        <li>Ⅰ. 生成AIツールの概要</li>
+                        <li>Ⅱ. ChatGPT各バージョンの詳細分析と例え話</li>
+                        <li>Ⅲ. ツールの役割の階層化</li>
+                        <li>Ⅳ. 資料作成のワークフロー</li>
+                        <li>Ⅴ. デジタル教材開発のプロセス</li>
+                        <li>まとめ：AI活用のポイント</li>
+                    </ul>
+                    <p>各セクションを順に解説し、生成AIを教育現場で効果的に活用するための知識を提供します。</p>
+                </div>
+            </div>
+
+            <!-- ChatGPT Slide -->
+            <div class="slide" id="slide-3">
+                <div class="slide-content">
+                    <div class="slide-header">
+                        <h2>主要な生成AIツール (1/3)</h2>
+                    </div>
+                    <div class="tool-card card-chatgpt">
+                        <div class="tool-header">
+                            <img src="https://imgur.com/oocxU8z.png" alt="ChatGPT" class="tool-img">
+                            <h3 style="margin-top: 0;">ChatGPT</h3>
+                        </div>
+                        <p><span class="highlight">OpenAI社</span>が開発した対話型の言語モデル。質問に答えたり、文章を生成したり、情報を要約したりすることができます。無料版でもGPT-4o miniへのアクセスやウェブ検索機能が利用可能です。</p>
+                        <p><strong>できることの例：</strong></p>
+                        <ul>
+                            <li>与えられたテーマで文章のアウトラインや初稿を作成</li>
+                            <li>誤字脱字のチェックや文章表現の調整</li>
+                            <li>学習指導案のヒントやアイデア提供</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Claude Slide -->
+            <div class="slide" id="slide-4">
+                <div class="slide-content">
+                    <div class="slide-header">
+                        <h2>主要な生成AIツール (2/3)</h2>
+                    </div>
+                    <div class="tool-card card-claude">
+                        <div class="tool-header">
+                            <img src="https://imgur.com/ZvDvETk.png" alt="Claude" class="tool-img">
+                            <h3 style="margin-top: 0;">Claude 3.7 Sonnet</h3>
+                        </div>
+                        <p><span class="highlight">Anthropic社</span>のAIモデル。高度なハイブリッド推論能力を持ち、段階的な思考プロセスを示すことができます。無料プランでも利用可能です。</p>
+                        <p><strong>できることの例：</strong></p>
+                        <ul>
+                            <li>プレゼンテーション用のテキストやスライド構成案の提案</li>
+                            <li>文章構成を整理して、よりわかりやすくリライト</li>
+                            <li>コーディングやデータ分析のサポート</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gemini & Perplexity Slide -->
+            <div class="slide" id="slide-5">
+                <div class="slide-content">
+                    <div class="slide-header">
+                        <h2>主要な生成AIツール (3/3)</h2>
+                    </div>
+                    <div class="tool-card card-gemini">
+                        <div class="tool-header">
+                            <img src="https://imgur.com/cpuN6bW.png" alt="Gemini" class="tool-img">
+                            <h3 style="margin-top: 0;">Gemini DeepResearch</h3>
+                        </div>
+                        <p><span class="highlight">Google社</span>が提供する高度なリサーチアシスタント。ウェブ全体を自律的に探索し、情報を分析して包括的なレポートを作成します。</p>
+                        <ul>
+                            <li>教育や学習内容に関する最新情報の収集</li>
+                            <li>複数のウェブページからの情報をまとめたレポートの作成</li>
+                        </ul>
+                    </div>
+                    <div class="tool-card card-perplexity">
+                        <div class="tool-header">
+                            <img src="https://imgur.com/HVhkidW.png" alt="Perplexity" class="tool-img">
+                            <h3 style="margin-top: 0;">Perplexity</h3>
+                        </div>
+                        <p>AIを活用した<span class="highlight">検索エンジン</span>。質問に対して直接的な回答と情報源を提示します。</p>
+                        <ul>
+                            <li>生徒からの質問に対する素早く正確な情報収集</li>
+                            <li>引用元を明示して検索結果を示すため、信頼性を確認しやすい</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NapkinAI & Canva Slide -->
+            <div class="slide" id="slide-6">
+                <div class="slide-content">
+                    <div class="slide-header">
+                        <h2>視覚教材作成ツール</h2>
+                    </div>
+                    <div class="tool-card card-napkin">
+                        <div class="tool-header">
+                            <img src="https://imgur.com/65QSv5o.png" alt="NapkinAI" class="tool-img">
+                            <h3 style="margin-top: 0;">NapkinAI</h3>
+                        </div>
+                        <p>テキストによる説明から<span class="highlight">スケッチや図を生成</span>するAIツール。</p>
+                        <ul>
+                            <li>フローチャートや組織図、教育用図解の作成</li>
+                            <li>アイデア出しを助ける即座のスケッチ生成</li>
+                        </ul>
+                    </div>
+                    <div class="tool-card card-canva">
+                        <div class="tool-header">
+                            <img src="https://imgur.com/yKUYWoK.png" alt="Canva" class="tool-img">
+                            <h3 style="margin-top: 0;">Canva</h3>
+                        </div>
+                        <p>初心者でも扱いやすい<span class="highlight">オンラインデザインツール</span>。</p>
+                        <ul>
+                            <li>ワークシート、プレゼンテーション、教室管理用ポスターの作成</li>
+                            <li>フローチャート、マインドマップ、グラフなどの図解</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ChatGPT Versions Slide -->
+            <div class="slide" id="slide-7">
+                <div class="slide-content">
+                    <div class="slide-header">
+                        <h2>ChatGPT各バージョンの詳細</h2>
+                    </div>
+                    <p>ChatGPTには複数のバージョンがあり、それぞれに特徴があります。キャラクター性で例えると分かりやすいでしょう。</p>
+                    <div class="character-card writer">
+                        <div class="character-head">
+                            <div class="character-icon writer">4.5</div>
+                            <div>
+                                <div class="character-title">ChatGPT-4.5</div>
+                                <div class="character-subtitle">"作家・クリエイター型"</div>
+                            </div>
+                        </div>
+                        <div class="character-desc">
+                            <p>幅広い話題に対応し、文章作りや創造的なアイデアに長けた<span class="highlight">「物知りな作家さん」</span>のイメージ。授業の導入例や生徒向けストーリー教材の提案に最適です。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- More ChatGPT Versions Slide -->
+            <div class="slide" id="slide-8">
+                <div class="slide-content">
+                    <div class="slide-header">
+                        <h2>ChatGPT各バージョンの詳細</h2>
+                    </div>
+                    <div class="character-card researcher">
+                        <div class="character-head">
+                            <div class="character-icon researcher">o1</div>
+                            <div>
+                                <div class="character-title">o1</div>
+                                <div class="character-subtitle">"研究者・専門家型"</div>
+                            </div>
+                        </div>
+                        <div class="character-desc">
+                            <p>論理的な推論が得意な<span class="highlight">「学者先生」</span>のイメージ。複雑な計算や証明が必要な教材作成に強みがあります。</p>
+                        </div>
+                    </div>
+                    <div class="character-card engineer">
+                        <div class="character-head">
+                            <div class="character-icon engineer">o3</div>
+                            <div>
+                                <div class="character-title">o3-mini-high</div>
+                                <div class="character-subtitle">"エンジニア・技術者型"</div>
+                            </div>
+                        </div>
+                        <div class="character-desc">
+                            <p>コーディングやデータ分析に強い<span class="highlight">「頼れるエンジニア」</span>のイメージ。授業用シミュレーションやプログラム作成で活躍します。</p>
+                        </div>
+                    </div>
+                    <p><strong>ポイント：</strong>無料版のChatGPTでも授業資料や学習支援には十分使えます。まずは無料版から試してみることをおすすめします。</p>
+                </div>
+            </div>
+
+            <!-- Tool Hierarchy Slide -->
+            <div class="slide" id="slide-9">
+                <div class="slide-content">
+                    <div class="slide-header">
+                        <h2>ツールの役割の階層化</h2>
+                    </div>
+                    <h3>主に使用するツール</h3>
+                    <div class="tool-card">
+                        <div class="tool-header">
+                            <img src="https://imgur.com/oocxU8z.png" alt="ChatGPT" class="tool-img">
+                            <div class="character-title">ChatGPT</div>
+                        </div>
+                        <p>テキスト生成や要約、発想支援などに広く対応。基本的な教育タスクで活躍します。</p>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-header">
+                            <img src="https://imgur.com/ZvDvETk.png" alt="Claude" class="tool-img">
+                            <div class="character-title">Claude 3.7 Sonnet</div>
+                        </div>
+                        <p>プレゼンテーション資料や論理整理、コーディング支援などで活躍します。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Supporting Tools Slide -->
+            <div class="slide" id="slide-10">
+                <div class="slide-content">
+                    <div class="slide-header">
+                        <h2>補助的に使用するツール</h2>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-header">
+                            <img src="https://imgur.com/cpuN6bW.png" alt="Gemini" class="tool-img">
+                            <div class="character-title">Gemini DeepResearch, Perplexity</div>
+                        </div>
+                        <p>リサーチや情報検索、参考資料収集などで使用します。</p>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-header">
+                            <img src="https://imgur.com/65QSv5o.png" alt="NapkinAI" class="tool-img">
+                            <div class="character-title">NapkinAI, Canva</div>
+                        </div>
+                        <p>作図・スケッチなど視覚的な資料作成で利用します。</p>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-header">
+                            <img src="https://imgur.com/4hLXDLF.png" alt="imgur" class="tool-img">
+                            <div class="character-title">imgur, Github</div>
+                        </div>
+                        <p>画像の共有やデジタル教材の公開・管理に役立ちます。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workflow Slide 1 -->
+            <div class="slide" id="slide-11">
+                <div class="slide-content">
+                    <div class="slide-header">
+                        <h2>資料作成のワークフロー</h2>
+                    </div>
+                    <p>生成AIを活用した教材作成は4つのステップで効率的に進められます：</p>
+                    <div class="process-mini">
+                        <div class="process-mini-step">
+                            <div class="mini-number">1</div>
+                            <div class="mini-label">情報収集</div>
+                        </div>
+                        <div class="process-mini-step">
+                            <div class="mini-number">2</div>
+                            <div class="mini-label">草案作成</div>
+                        </div>
+                        <div class="process-mini-step">
+                            <div class="mini-number">3</div>
+                            <div class="mini-label">図解作成</div>
+                        </div>
+                        <div class="process-mini-step">
+                            <div class="mini-number">4</div>
+                            <div class="mini-label">補助的図解</div>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">1</div>
+                        <h4>情報収集（Gemini DeepResearch・Perplexity）</h4>
+                        <p>最初に、授業テーマや教科に関する最新情報や参考資料を集めます。ウェブ全体を自動的に探索したり、質問に対して直接的な回答と情報源を得られます。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workflow Slide 2 -->
+            <div class="slide" id="slide-12">
+                <div class="slide-content">
+                    <div class="slide-header">
+                        <h2>資料作成のワークフロー</h2>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">2</div>
+                        <h4>草案作成（ChatGPT）</h4>
+                        <p>収集した情報をもとに、ChatGPTに「授業のアウトライン」「レポート初稿」「生徒向けプリントのたたき台」などを依頼します。生成された文章は初稿として捉え、あとから教員自身の知識で確認・修正しましょう。</p>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">3</div>
+                        <h4>図解・プレゼン資料の作成（Claude 3.7 Sonnet）</h4>
+                        <p>草案ができたら、Claudeを使ってより見やすい資料やスライド構成を提案してもらいます。複雑な概念を説明するための図解のアイデアや構成案を生成できます。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workflow Slide 3 -->
+            <div class="slide" id="slide-13">
+                <div class="slide-content">
+                    <div class="slide-header">
+                        <h2>資料作成のワークフロー</h2>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">4</div>
+                        <h4>補助的な図解作成（NapkinAI, Canva）</h4>
+                        <p>Claudeなどで作った内容をさらに詳しい図やフローチャートにしたいときにNapkinAIを活用します。テキストから図解を生成したり、Canvaの豊富なテンプレートを使って視覚教材を作成できます。</p>
+                    </div>
+                    <p>このように複数のAIツールを組み合わせて使うことで、より質の高い教材を効率的に作成できます。</p>
+                </div>
+            </div>
+
+            <!-- Digital Material Process Slide -->
+            <div class="slide" id="slide-14">
+                <div class="slide-content">
+                    <div class="slide-header">
+                        <h2>デジタル教材開発のプロセス</h2>
+                    </div>
+                    <p>デジタル教材（ウェブ教材やPDF資料など）を作る流れは次の4ステップです：</p>
+                    <div class="process-mini">
+                        <div class="process-mini-step">
+                            <div class="mini-number">1</div>
+                            <div class="mini-label">草案作成</div>
+                        </div>
+                        <div class="process-mini-step">
+                            <div class="mini-number">2</div>
+                            <div class="mini-label">デバッグ</div>
+                        </div>
+                        <div class="process-mini-step">
+                            <div class="mini-number">3</div>
+                            <div class="mini-label">画像活用</div>
+                        </div>
+                        <div class="process-mini-step">
+                            <div class="mini-number">4</div>
+                            <div class="mini-label">公開共有</div>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">1</div>
+                        <h4>草案作成：Claude 3.7 Sonnetで初稿を作る</h4>
+                        <p>教材の概要・章立てなどの骨子をClaudeに作成してもらいます。「単元のゴール」「学習者のレベル」「取り上げる内容」を指示すると、初稿を提案してくれます。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Digital Material Process Slide 2 -->
+            <div class="slide" id="slide-15">
+                <div class="slide-content">
+                    <div class="slide-header">
+                        <h2>デジタル教材開発のプロセス</h2>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">2</div>
+                        <h4>デバッグ・デプロイ：ChatGPTで文章や論理をチェック・調整</h4>
+                        <p>Claudeが作った初稿をChatGPTで再確認し、表現の修正や難易度の調整を行います。「もっとやさしい言葉に変えて」「たとえ話を追加して」などと指示できます。</p>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">3</div>
+                        <h4>画像の活用：imgurにアップロードし、教材に組み込み</h4>
+                        <p>教材に必要な画像をimgurにアップロードして埋め込みます。アップロード後に発行される直接リンクや埋め込みコードを使用します。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Digital Material Process Slide 3 -->
+            <div class="slide" id="slide-16">
+                <div class="slide-content">
+                    <div class="slide-header">
+                        <h2>デジタル教材開発のプロセス</h2>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">4</div>
+                        <h4>公開：Githubを使って教材を公開・共有・更新</h4>
+                        <p>完成した教材をGithubにアップロードして共有します。バージョン管理や履歴追跡もでき、「GitHub Classroom」機能を使って生徒への配付や課題管理にも応用できます。</p>
+                    </div>
+                    <p>このプロセスでは、各AIツールの特性を活かし、高品質なデジタル教材を効率的に開発・共有できます。</p>
+                </div>
+            </div>
+
+            <!-- Summary Slide -->
+            <div class="slide" id="slide-17">
+                <div class="slide-content">
+                    <div class="slide-header">
+                        <h2>まとめ：AI活用のポイント</h2>
+                    </div>
+                    <div class="summary-point">
+                        <p><strong>まずは無料版で気軽に試す:</strong> ChatGPTやClaudeの無料版でも十分実用的です。基本的な教育タスクをこなすのに十分な機能を提供しています。</p>
+                    </div>
+                    <div class="summary-point">
+                        <p><strong>AIのアウトプットは"下書き"として扱う:</strong> 完成版にする前に、教員の知識と経験でチェック・修正しましょう。</p>
+                    </div>
+                    <div class="summary-point">
+                        <p><strong>得意分野を使い分ける:</strong> 図解やプレゼンならNapkinAI、Canva、Claude、プログラミング支援ならChatGPT、リサーチならGemini DeepResearchといった役割分担を意識します。</p>
+                    </div>
+                    <div class="summary-point">
+                        <p><strong>著作権や個人情報に配慮する:</strong> 提供元が明らかにならないままコピペしない、個人情報を含む質問をしないなど、適切に利用しましょう。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Final Slide -->
+            <div class="slide" id="slide-18">
+                <div class="slide-content">
+                    <div class="slide-header">
+                        <h1 style="font-size: 2rem;">ご清聴ありがとうございました</h1>
+                    </div>
+                    <p style="text-align: center; font-size: 1.2rem; margin-top: 30px;">生成AIの教育的利活用ガイド © 2025</p>
+                    <div class="glow-effect glow-1"></div>
+                    <div class="glow-effect glow-2"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-indicator">1 / 18</div>
+
+        <div class="nav-controls">
+            <div class="nav-button prev"></div>
+            <div class="nav-button next"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.slide');
+            const slideIndicator = document.querySelector('.slide-indicator');
+            const prevButton = document.querySelector('.nav-button.prev');
+            const nextButton = document.querySelector('.nav-button.next');
+            let currentSlideIndex = 0;
+            const totalSlides = slides.length;
+            
+            // Initial slide indicator
+            updateSlideIndicator();
+            
+            // Navigation button click events
+            prevButton.addEventListener('click', goToPreviousSlide);
+            nextButton.addEventListener('click', goToNextSlide);
+            
+            // Swipe detection
+            let touchStartX = 0;
+            let touchEndX = 0;
+            
+            document.addEventListener('touchstart', function(event) {
+                touchStartX = event.changedTouches[0].screenX;
+            }, false);
+            
+            document.addEventListener('touchend', function(event) {
+                touchEndX = event.changedTouches[0].screenX;
+                handleSwipe();
+            }, false);
+            
+            function handleSwipe() {
+                const threshold = 50; // Minimum distance for a swipe
+                if (touchEndX < touchStartX - threshold) {
+                    goToNextSlide();
+                } else if (touchEndX > touchStartX + threshold) {
+                    goToPreviousSlide();
+                }
+            }
+            
+            // Double tap detection for navigation
+            let lastTap = 0;
+            document.addEventListener('touchend', function(event) {
+                const currentTime = new Date().getTime();
+                const tapLength = currentTime - lastTap;
+                
+                if (tapLength < 300 && tapLength > 0) {
+                    // Double tap detected
+                    const x = event.changedTouches[0].clientX;
+                    const screenWidth = window.innerWidth;
+                    
+                    if (x < screenWidth / 2) {
+                        goToPreviousSlide();
+                    } else {
+                        goToNextSlide();
+                    }
+                    event.preventDefault();
+                }
+                
+                lastTap = currentTime;
+            });
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'ArrowLeft') {
+                    goToPreviousSlide();
+                } else if (event.key === 'ArrowRight') {
+                    goToNextSlide();
+                }
+            });
+            
+            // Functions to navigate slides
+            function goToNextSlide() {
+                if (currentSlideIndex < totalSlides - 1) {
+                    showSlide(currentSlideIndex + 1);
+                }
+            }
+            
+            function goToPreviousSlide() {
+                if (currentSlideIndex > 0) {
+                    showSlide(currentSlideIndex - 1);
+                }
+            }
+            
+            function showSlide(index) {
+                // Hide current slide
+                slides[currentSlideIndex].classList.remove('active');
+                
+                // Show new slide
+                currentSlideIndex = index;
+                slides[currentSlideIndex].classList.add('active');
+                
+                // Update indicator
+                updateSlideIndicator();
+                
+                // Scroll to top of new slide
+                slides[currentSlideIndex].scrollTop = 0;
+            }
+            
+            function updateSlideIndicator() {
+                slideIndicator.textContent = `${currentSlideIndex + 1} / ${totalSlides}`;
+            }
+        });
+    </script>
+</body>
+</html>
